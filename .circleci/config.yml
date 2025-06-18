@@ -41,7 +41,7 @@ jobs:
             cd qBittorrent-master
             CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror" \
             LDFLAGS="$LDFLAGS -gz" \
-            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DCMAKE_PREFIX_PATH="../6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON
+            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DCMAKE_PREFIX_PATH="../qt/6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON
             cmake --build build
       - run:
           name: Test qBittorrent
