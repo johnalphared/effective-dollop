@@ -28,6 +28,17 @@ jobs:
             cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -Ddeprecated-functions=OFF
             cmake --build build --verbose
             sudo cmake --install build
+      - run:
+          name: Build qBittorrent
+          command: |
+            git clone https://github.com/qbittorrent/qBittorrent
+            cd qBittorrent
+            CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror" \
+            LDFLAGS="$LDFLAGS -gz" \
+            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
+            cmake --build build
+            cmake --build build --target check
+            DESTDIR="qbittorrent" cmake --install build
 
 workflows:
   say-hello-workflow:
