@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  say-hello:
+  build:
     machine:
       image: ubuntu-2404:current
     steps:
@@ -9,8 +9,27 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run:
+          name: Install tools & libraries
+          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build libssl-dev -y
+      - run:
+          name: Install Boost
+          command: |
+            wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz
+            tar xf boost_1_88_0.tar.gz
+            cd boost_1_88_0
+            ./bootstrap.sh
+            ./b2 stage --stagedir=./ --with-headers
+      - run:
+          name: Install libtorrent
+          command: |
+            git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
+            cd libtorrent
+            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -Ddeprecated-functions=OFF
+            cmake --build build --verbose
+            sudo cmake --install build
 
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - build
