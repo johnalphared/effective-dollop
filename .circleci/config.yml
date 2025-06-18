@@ -46,6 +46,14 @@ jobs:
       - run:
           name: Test qBittorrent
           command: cd qBittorrent-master && cmake --build build --target check
+      - run:
+          name: Compress built binary
+          command: |
+            cd qBittorrent-master/build
+            tar czvf ../../qbittorrent-build.tar.gz *
+      - store_artifacts:
+          path: qbittorrent-build.tar.gz
+          destination: qbittorrent-build.tar.gz
 
 workflows:
   say-hello-workflow:
