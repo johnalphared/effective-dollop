@@ -11,7 +11,7 @@ jobs:
           command: "echo Hello, World!"
       - run:
           name: Install tools & libraries
-          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build libssl-dev -y
+          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build libssl-dev python3 python3-pip -y
       - run:
           name: Install Boost
           command: |
@@ -25,20 +25,27 @@ jobs:
           command: |
             git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
             cd libtorrent
-            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -Ddeprecated-functions=OFF
-            cmake --build build --verbose
+            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost_1_88_0/lib/cmake"
+            cmake --build build
             sudo cmake --install build
+      - run:
+          name: Install Qt6
+          command: |
+            pip install aqtinstall
+            aqt install-qt -O qt linux desktop 6.9.1 linux_gcc_64
       - run:
           name: Build qBittorrent
           command: |
-            git clone https://github.com/qbittorrent/qBittorrent
-            cd qBittorrent
+            wget  https://github.com/qbittorrent/qBittorrent/archive/refs/heads/master.zip
+            unzip master.zip
+            cd qBittorrent-master
             CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror" \
             LDFLAGS="$LDFLAGS -gz" \
-            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
+            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DCMAKE_PREFIX_PATH="../6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON
             cmake --build build
-            cmake --build build --target check
-            DESTDIR="qbittorrent" cmake --install build
+      - run:
+          name: Test qBittorrent
+          command: cd qBittorrent-master && cmake --build build --target check
 
 workflows:
   say-hello-workflow:
