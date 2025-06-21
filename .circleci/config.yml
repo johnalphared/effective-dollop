@@ -20,7 +20,7 @@ jobs:
             BOOST_VERSION_="${BOOST_VERSION//./_}"
             wget https://archives.boost.io/release/1.88.0/source/boost_${BOOST_VERSION_}.tar.gz
             tar xf boost_${BOOST_VERSION_}.tar.gz
-            mv boost_${BOOST_VERSION_}.tar.gz boost
+            mv boost_${BOOST_VERSION_} boost
             cd boost
             ./bootstrap.sh
             ./b2 stage --stagedir=./ --with-headers
