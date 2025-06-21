@@ -2,6 +2,8 @@ version: 2.1
 
 jobs:
   build:
+    environment:
+      BOOST_VERSION: 1.88.0
     machine:
       image: ubuntu-2404:current
     steps:
@@ -15,9 +17,11 @@ jobs:
       - run:
           name: Install Boost
           command: |
-            wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz
-            tar xf boost_1_88_0.tar.gz
-            cd boost_1_88_0
+            BOOST_VERSION_="${BOOST_VERSION//./_}"
+            wget https://archives.boost.io/release/1.88.0/source/boost_${BOOST_VERSION_}.tar.gz
+            tar xf boost_${BOOST_VERSION_}.tar.gz
+            mv boost_${BOOST_VERSION_}.tar.gz boost
+            cd boost
             ./bootstrap.sh
             ./b2 stage --stagedir=./ --with-headers
       - run:
@@ -25,7 +29,7 @@ jobs:
           command: |
             git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
             cd libtorrent
-            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost_1_88_0/lib/cmake"
+            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost/lib/cmake"
             cmake --build build
             sudo cmake --install build
       - run:
@@ -41,19 +45,11 @@ jobs:
             cd qBittorrent-master
             CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror" \
             LDFLAGS="$LDFLAGS -gz" \
-            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost_1_88_0/lib/cmake" -DCMAKE_PREFIX_PATH="../qt/6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
+            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost/lib/cmake" -DCMAKE_PREFIX_PATH="../qt/6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
             cmake --build build
       - run:
           name: Test qBittorrent
           command: cd qBittorrent-master && cmake --build build --target check
-      - run:
-          name: Compress built binary
-          command: |
-            cd qBittorrent-master/build
-            tar czvf ../../qbittorrent-build.tar.gz *
-      - store_artifacts:
-          path: qbittorrent-build.tar.gz
-          destination: qbittorrent-build.tar.gz
 
 workflows:
   say-hello-workflow:
