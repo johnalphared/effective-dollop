@@ -13,7 +13,7 @@ jobs:
           command: "echo Hello, World!"
       - run:
           name: Install tools & libraries
-          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build libssl-dev python3 python3-pip -y
+          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build python3 python3-pip -y
       - run:
           name: Install Boost
           command: |
@@ -29,23 +29,27 @@ jobs:
           command: |
             git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
             cd libtorrent
-            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost/lib/cmake"
+            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost/lib/cmake"
             cmake --build build
             sudo cmake --install build
       - run:
           name: Install Qt6
           command: |
             pip install aqtinstall
-            aqt install-qt -O qt linux desktop 6.9.1 linux_gcc_64
+            aqt install-src -O qt linux 6.9.1 --archives qtbase qt5
+            cd qt/6.9.1/Src/ 
+            ./configure -static -release -openssl-linked OPENSSL_USE_STATIC_LIBS=ON -ltcg -reduce-exports -gc-binaries
+            cmake --build . -j
+            cmake --install .
       - run:
           name: Build qBittorrent
           command: |
-            wget  https://github.com/qbittorrent/qBittorrent/archive/refs/heads/master.zip
-            unzip master.zip
+            wget  https://github.com/qbittorrent/qBittorrent/archive/refs/heads/master.tar.gz
+            tar xf master.tar.gz
             cd qBittorrent-master
-            CXXFLAGS="$CXXFLAGS -DQT_FORCE_ASSERTS -Werror" \
-            LDFLAGS="$LDFLAGS -gz" \
-            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBOOST_ROOT="../boost/lib/cmake" -DCMAKE_PREFIX_PATH="../qt/6.9.1/gcc_64" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
+            CXXFLAGS="$CXXFLAGS -Werror" \
+            LDFLAGS="$LDFLAGS -static" \
+            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT="../boost/lib/cmake" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF
             cmake --build build
       - run:
           name: Test qBittorrent
