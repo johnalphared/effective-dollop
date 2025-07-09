@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: ubuntu-2404:current
+      image: ubuntu-2204:current
     environment:
       BOOST_VERSION: 1.88.0
     steps:
