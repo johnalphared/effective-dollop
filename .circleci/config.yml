@@ -2,9 +2,8 @@ version: 2.1
 
 jobs:
   build:
-    docker:
-      - image: debian:12
-    resource_class: xlarge
+    machine:
+      image: ubuntu-2404:current
     environment:
       BOOST_VERSION: 1.88.0
     steps:
@@ -14,7 +13,7 @@ jobs:
           command: "echo Hello, World!"
       - run:
           name: Install tools & libraries
-          command: apt update && apt install wget git build-essential cmake ninja-build python3 python3-pip libgl1-mesa-dev sudo -y
+          command: apt update && apt install wget git build-essential cmake ninja-build python3 python3-pip libgl1-mesa-dev -y
       - run:
           name: Install Boost
           command: |
@@ -31,7 +30,7 @@ jobs:
             git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
             cd libtorrent
             cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost/lib/cmake"
-            cmake --build build
+            cmake --build build -j
             sudo cmake --install build
       - run:
           name: Install Qt6
@@ -39,7 +38,7 @@ jobs:
             pip install aqtinstall
             aqt install-src -O qt linux 6.9.1 --archives qtbase qttools qt5
             cd qt/6.9.1/Src/ 
-            ./configure -static -release -openssl-linked OPENSSL_USE_STATIC_LIBS=ON -ltcg -reduce-exports -gc-binaries -prefix $CIRCLE_WORKING_DIRECTORY/Qt6
+            ./configure -static -release -ltcg -reduce-exports -gc-binaries -prefix $CIRCLE_WORKING_DIRECTORY/Qt6
             cmake --build . -j
             cmake --install .
       - run:
