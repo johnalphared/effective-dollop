@@ -4,6 +4,7 @@ jobs:
   build:
     docker:
       - image: debian:12
+    resource_class: xlarge
     environment:
       BOOST_VERSION: 1.88.0
     steps:
