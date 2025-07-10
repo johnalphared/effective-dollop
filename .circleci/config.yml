@@ -3,59 +3,19 @@ version: 2.1
 jobs:
   build:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     environment:
       BOOST_VERSION: 1.88.0
-      DEBIAN_FRONTEND: noninteractive
     steps:
       - checkout
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - setup_remote_docker:
+          version: 20.10.7
       - run:
-          name: Install tools & libraries
-          command: sudo apt update && sudo apt install wget git build-essential cmake ninja-build python3 python3-pip libgl1-mesa-dev -y
-      - run:
-          name: Install Boost
-          command: |
-            BOOST_VERSION_="${BOOST_VERSION//./_}"
-            wget https://archives.boost.io/release/1.88.0/source/boost_${BOOST_VERSION_}.tar.gz
-            tar xf boost_${BOOST_VERSION_}.tar.gz
-            mv boost_${BOOST_VERSION_} boost
-            cd boost
-            ./bootstrap.sh
-            ./b2 stage --stagedir=./ --with-headers
-      - run:
-          name: Install libtorrent
-          command: |
-            git clone --depth 1 --recurse-submodules https://github.com/arvidn/libtorrent.git
-            cd libtorrent
-            cmake -B build -G "Ninja" -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20 -DBOOST_ROOT="../boost/lib/cmake"
-            cmake --build build -j
-            sudo cmake --install build
-      - run:
-          name: Install Qt6
-          command: |
-            pip install aqtinstall
-            aqt install-src -O qt linux 6.9.1 --archives qtbase qttools qt5
-            cd qt/6.9.1/Src/ 
-            ./configure -static -release -ltcg -reduce-exports -gc-binaries -prefix $CIRCLE_WORKING_DIRECTORY/Qt6
-            cmake --build . -j
-            cmake --install .
-      - run:
-          name: Build qBittorrent
-          command: |
-            wget  https://github.com/qbittorrent/qBittorrent/archive/refs/heads/master.tar.gz
-            tar xf master.tar.gz
-            cd qBittorrent-master
-            CXXFLAGS="$CXXFLAGS -Werror" \
-            LDFLAGS="$LDFLAGS -static" \
-            cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT="../boost/lib/cmake" -DTESTING=ON -DVERBOSE_CONFIGURE=ON -DGUI=OFF -DCMAKE_PREFIX_PATH="$CIRCLE_WORKING_DIRECTORY/Qt6"
-            cmake --build build
-      - run:
-          name: Test qBittorrent
-          command: cd qBittorrent-master && cmake --build build --target check
-
+          name: Build using docker
+          command: docker build .
 workflows:
   say-hello-workflow:
     jobs:
