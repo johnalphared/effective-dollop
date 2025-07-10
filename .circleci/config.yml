@@ -16,7 +16,7 @@ jobs:
           command: docker buildx build --output . .
       - run:
           name: Upload artifact
-          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest -v'
+          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest'
 workflows:
   say-hello-workflow:
     jobs:
