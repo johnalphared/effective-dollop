@@ -2,7 +2,7 @@ FROM debian:12 AS base
 
 WORKDIR /workspace
 RUN apt update
-RUN apt install wget git build-essential cmake ninja-build libgl1-mesa-dev python3-pip -y
+RUN apt install wget git build-essential cmake ninja-build libgl1-mesa-dev python3-pip libssl-dev -y
 
 FROM base AS qt
 RUN pip install --break-system-packages aqtinstall
