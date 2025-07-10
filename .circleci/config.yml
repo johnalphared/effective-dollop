@@ -13,7 +13,7 @@ jobs:
           command: "echo Hello, World!"
       - run:
           name: Build using docker
-          command: docker buildx --output . .
+          command: docker buildx build --output . .
       - run:
           name: Upload artifact
           command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest -v'
