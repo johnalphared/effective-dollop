@@ -1,23 +1,22 @@
 version: 2.1
-
+orbs:
+  win: circleci/windows@4.1
 jobs:
   build:
-    machine:
-      image: ubuntu-2404:current
-    environment:
-      BOOST_VERSION: 1.88.0
-      QT_VERSION: 6.9.1
+    executor: win/server-2019
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Clone repo"
+          command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
-          name: Build using docker
-          command: docker buildx build --output . --build-arg BOOST_VERSION --build-arg QT_VERSION .
-      - run:
-          name: Upload artifact
-          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest'
+          name: Build project
+          command: |
+            cd Mouse-Debouncer/Mouse Debouncer
+            msbuild "Mouse Debouncer.vcxproj"
+#      - run:
+#          name: Upload artifact
+#          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest'
 workflows:
   say-hello-workflow:
     jobs:
