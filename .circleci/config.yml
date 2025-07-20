@@ -12,7 +12,7 @@ jobs:
       - run:
           name: "Install SDK"
           command: |
-            Invoke-WebRequest OutFile Install-WindowsSdkISO.ps1 -Uri https://raw.githubusercontent.com/CommunityToolkit/WindowsCommunityToolkit/refs/heads/main/build/Install-WindowsSdkISO.ps1
+            Invoke-WebRequest -OutFile Install-WindowsSdkISO.ps1 -Uri https://raw.githubusercontent.com/CommunityToolkit/WindowsCommunityToolkit/refs/heads/main/build/Install-WindowsSdkISO.ps1
             .\Install-WindowsSdkISO.ps1 16299
       - run:
           name: Build project
