@@ -15,7 +15,7 @@ jobs:
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
             (Get-Content $filePath) -replace "10\.0\.16299\.0", "10.0.26100" | Set-Content $filePath
-            msbuild $filePath -property:Configuration=Release
+            msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=10.0.22621.2428
       - run:
           name: Pack binary
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
