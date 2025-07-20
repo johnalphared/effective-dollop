@@ -14,9 +14,21 @@ jobs:
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             msbuild "Mouse Debouncer.vcxproj" -property:Configuration=Release
-#      - run:
-#          name: Upload artifact
-#          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest'
+      - run:
+          name: Pack binary
+          command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
+      - run:
+          name: Upload artifact
+          command: |
+            $form = @{
+                packageName  = 'mouse-debouncer'
+                packageVersion   = 'latest'
+                packageFiles     = Get-Item -Path 'mouse-debouncer.7z'
+            }
+            $headers = @{
+              "Authorization" = "Bearer $env:REPOFLOW_PAT"
+            }
+            Invoke-WebRequest -Uri $env:REPOFLOW_URL -Headers $headers -Method Post -Form $form
 workflows:
   say-hello-workflow:
     jobs:
