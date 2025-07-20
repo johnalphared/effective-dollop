@@ -14,8 +14,7 @@ jobs:
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
-            Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\" -Directory
-            Get-ChildItem "C:\Program Files\Windows Kits\11\" -Directory
+            (Get-Item "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\Windows").GetValue("CurrentVersion")
             msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=10.0.22621.2428
       - run:
           name: Pack binary
