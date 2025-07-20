@@ -10,11 +10,15 @@ jobs:
           name: "Clone repo"
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
+          name: "Install SDK"
+          command: |
+            Invoke-WebRequest OutFile Install-WindowsSdkISO.ps1 -Uri https://raw.githubusercontent.com/CommunityToolkit/WindowsCommunityToolkit/refs/heads/main/build/Install-WindowsSdkISO.ps1
+            .\Install-WindowsSdkISO.ps1 16299
+      - run:
           name: Build project
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
-            (Get-Content $filePath) -replace "10\.0\.16299\.0", "10.0" | Set-Content $filePath
             msbuild $filePath -property:Configuration=Release
       - run:
           name: Pack binary
