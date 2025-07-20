@@ -20,6 +20,7 @@ jobs:
       - run:
           name: Upload artifact
           command: |
+            $PSVersionTable
             $form = @{
                 packageName  = 'mouse-debouncer'
                 packageVersion   = 'latest'
