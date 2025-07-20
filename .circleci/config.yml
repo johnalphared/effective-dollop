@@ -1,23 +1,35 @@
 version: 2.1
-
+orbs:
+  win: circleci/windows@5.1.0
 jobs:
   build:
-    machine:
-      image: ubuntu-2404:current
-    environment:
-      BOOST_VERSION: 1.88.0
-      QT_VERSION: 6.9.1
+    executor: win/server-2022
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Clone repo"
+          command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
-          name: Build using docker
-          command: docker buildx build --output . --build-arg BOOST_VERSION --build-arg QT_VERSION .
+          name: Build project
+          command: |
+            cd "Mouse-Debouncer/Mouse Debouncer"
+            msbuild "Mouse Debouncer.vcxproj" -property:Configuration=Release
+      - run:
+          name: Pack binary
+          command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
       - run:
           name: Upload artifact
-          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@qbt.tar.gz" -F packageName=qbt-static-amd64 -F packageVersion=latest'
+          command: |
+            $PSVersionTable
+            $form = @{
+                packageName  = 'mouse-debouncer'
+                packageVersion   = 'latest'
+                packageFiles     = Get-Item -Path 'mouse-debouncer.7z'
+            }
+            $headers = @{
+              "Authorization" = "Bearer $env:REPOFLOW_PAT"
+            }
+            Invoke-WebRequest -Uri $env:REPOFLOW_URL -Headers $headers -Method Post -Form $form
 workflows:
   say-hello-workflow:
     jobs:
