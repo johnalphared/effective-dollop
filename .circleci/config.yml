@@ -14,7 +14,7 @@ jobs:
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
-            (Get-Content $filePath) -replace "10\.0\.16299\.0", "10.0.26100.4188" | Set-Content $filePath
+            (Get-Content $filePath) -replace "10\.0\.16299\.0", "10.0.26100" | Set-Content $filePath
             msbuild $filePath -property:Configuration=Release
       - run:
           name: Pack binary
