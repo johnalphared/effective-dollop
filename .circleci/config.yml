@@ -10,11 +10,6 @@ jobs:
           name: "Clone repo"
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
-          name: Install powershell
-          shell: cmd.exe
-          command: |
-            dotnet tool install --global PowerShell
-      - run:
           name: Build project
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
@@ -26,6 +21,7 @@ jobs:
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
       - run:
           name: Upload artifact
+          shell: pwsh.exe
           command: |
             $PSVersionTable
             $form = @{
