@@ -10,16 +10,12 @@ jobs:
           name: "Clone repo"
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
-          name: Install SDK
-          command: |
-            &([ScriptBlock]::Create((irm asheroto.com/winget))) -Force
-      - run:
           name: Build project
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
-            winget install --source winget --exact --id Microsoft.WindowsSDK.10.0.26100
-            msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=10.0.26100.4188
+            $sdkVer = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\Lib\" | Sort-Object -Descending Name | Select-Object -First 1 -Property Name
+            msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=$sdkVer
       - run:
           name: Pack binary
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
