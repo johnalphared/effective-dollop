@@ -11,8 +11,9 @@ jobs:
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
           name: Install powershell
+          shell: cmd.exe
           command: |
-            msiexec /i https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2-win-x64.msi
+            msiexec.exe /package https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2-win-x64.msi /quiet ADD_PATH=1
       - run:
           name: Build project
           command: |
