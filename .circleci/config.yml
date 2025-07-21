@@ -13,7 +13,7 @@ jobs:
           name: Install powershell
           shell: cmd.exe
           command: |
-            msiexec.exe /package https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2-win-x64.msi /quiet ADD_PATH=1
+            dotnet tool install --global PowerShell
       - run:
           name: Build project
           command: |
@@ -26,6 +26,7 @@ jobs:
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
       - run:
           name: Upload artifact
+          shell: pwsh.exe
           command: |
             $PSVersionTable
             $form = @{
