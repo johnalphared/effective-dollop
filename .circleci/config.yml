@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Install gcc
           command: |
-            winget install --id=BrechtSanders.WinLibs.MCF.UCRT --accept-package-agreements
+            winget install --id=BrechtSanders.WinLibs.MCF.UCRT --accept-package-agreements --accept-source-agreements
       - run:
           name: Build project
           command: |
