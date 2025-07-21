@@ -10,6 +10,16 @@ jobs:
           name: "Clone repo"
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
+          name: Install SDK
+          command: |
+            $progressPreference = 'silentlyContinue'
+            Write-Host "Installing WinGet PowerShell module from PSGallery..."
+            Install-PackageProvider -Name NuGet -Force | Out-Null
+            Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
+            Write-Host "Using Repair-WinGetPackageManager cmdlet to bootstrap WinGet..."
+            Repair-WinGetPackageManager -AllUsers
+            Write-Host "Done."
+      - run:
           name: Build project
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
