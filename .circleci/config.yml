@@ -26,7 +26,6 @@ jobs:
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
       - run:
           name: Upload artifact
-          shell: pwsh.exe
           command: |
             $PSVersionTable
             $form = @{
