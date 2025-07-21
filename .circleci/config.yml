@@ -7,6 +7,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install winget
+          command: |
+            irm asheroto.com/winget | iex
+      - run:
+          name: Install gcc
+          command: |
+            winget install --id=BrechtSanders.WinLibs.MCF.UCRT
+      - run:
           name: Build project
           command: |
             gcc -o mouse-debouncer.exe mouse-debouncer.c -mwindows
