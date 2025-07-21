@@ -10,13 +10,9 @@ jobs:
           name: "Clone repo"
           command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
       - run:
-          name: Install winget
-          command: |
-            irm asheroto.com/winget | iex
-      - run:
           name: Install powershell
           command: |
-            winget install --id Microsoft.PowerShell --source winget
+            msiexec /i https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2-win-x64.msi
       - run:
           name: Build project
           command: |
