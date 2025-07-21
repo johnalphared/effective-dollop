@@ -14,8 +14,8 @@ jobs:
           command: |
             cd "Mouse-Debouncer/Mouse Debouncer"
             $filePath = "Mouse Debouncer.vcxproj"
-            Get-WindowsCapability -Name "*SDK*" -Online
-            msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=10.0.22621.2428
+            winget install --source winget --exact --id Microsoft.WindowsSDK.10.0.26100
+            msbuild $filePath -property:Configuration=Release /p:WindowsTargetPlatformVersion=10.0.26100.4188
       - run:
           name: Pack binary
           command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
