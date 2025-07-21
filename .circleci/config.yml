@@ -3,20 +3,16 @@ orbs:
   win: circleci/windows@5.1.0
 jobs:
   build:
-    executor: win/server-2019
+    executor: win/server-2022
     steps:
       - checkout
       - run:
-          name: "Clone repo"
-          command: "git clone https://github.com/marvinlehmann/Mouse-Debouncer.git"
-      - run:
           name: Build project
           command: |
-            cd "Mouse-Debouncer/Mouse Debouncer"
-            msbuild "Mouse Debouncer.vcxproj" -property:Configuration=Release
+            gcc -o mouse-debouncer.exe mouse-debouncer.c -mwindows
       - run:
           name: Pack binary
-          command: 7z a mouse-debouncer.7z "Mouse-Debouncer/Mouse Debouncer/Release"
+          command: 7z a mouse-debouncer.7z mouse-debouncer.exe
       - run:
           name: Upload artifact
           command: |
