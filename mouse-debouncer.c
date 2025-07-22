@@ -19,11 +19,13 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
             OutputDebugStringA(buff);
             if(blockNext){
                 blockNext=0;
+                OutputDebugStringA("blockNext");
                 return 1;
             }
             if (elapsed < DEBOUNCE_INTERVAL_MS) {
                 // Suppress event (debounced)
                 blockNext=1;
+                OutputDebugStringA("block");
                 return 1; // Non-zero means event is blocked
             }
 
