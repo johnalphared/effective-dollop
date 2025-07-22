@@ -15,16 +15,15 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
             DWORD currentTime = GetTickCount();
             DWORD elapsed = currentTime - lastClickTime;
             if(wParam == WM_LBUTTONDOWN)sprintf(buff,"down %u\n",elapsed);
-            else if(wParam == WM_LBUTTONUP)sprintf(buff,"up %u\n",elapsed);
-            else sprintf(buff,"else\n");
+            if(wParam == WM_LBUTTONUP)sprintf(buff,"up %u\n",elapsed);
             OutputDebugStringA(buff);
             if(blockNext){
-                blockNext=0
+                blockNext=0;
                 return 1;
             }
             if (elapsed < DEBOUNCE_INTERVAL_MS) {
                 // Suppress event (debounced)
-                blockNext=1
+                blockNext=1;
                 return 1; // Non-zero means event is blocked
             }
 
