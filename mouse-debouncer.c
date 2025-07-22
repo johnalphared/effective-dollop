@@ -6,16 +6,25 @@
 
 HHOOK mouseHook;
 DWORD lastClickTime = 0;
+char buff[100]=0;
+short blockNext=0;
 
 LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0) {
         if (wParam == WM_LBUTTONDOWN || wParam == WM_LBUTTONUP) {
             DWORD currentTime = GetTickCount();
             DWORD elapsed = currentTime - lastClickTime;
-            if(wParam == WM_LBUTTONDOWN)printf("down %u\n",elapsed);
-            if(wParam == WM_LBUTTONUP)printf("up %u\n",elapsed);
+            if(wParam == WM_LBUTTONDOWN)sprintf(buff,"down %u\n",elapsed);
+            else if(wParam == WM_LBUTTONUP)sprintf(buff,"up %u\n",elapsed);
+            else sprintf(buff,"else\n");
+            OutputDebugStringA(buff);
+            if(blockNext){
+                blockNext=0
+                return 1;
+            }
             if (elapsed < DEBOUNCE_INTERVAL_MS) {
                 // Suppress event (debounced)
+                blockNext=1
                 return 1; // Non-zero means event is blocked
             }
 
@@ -36,7 +45,7 @@ int main() {
         return 1;
     }
 
-    printf("Mouse debounce filter running... Press Ctrl+C to exit.\n");
+    OutputDebugStringA("Mouse debounce filter running...\n");
 
     // Message loop to keep the hook alive
     while (GetMessage(&msg, NULL, 0, 0)) {
