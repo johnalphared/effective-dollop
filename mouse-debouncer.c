@@ -6,7 +6,7 @@
 
 HHOOK mouseHook;
 DWORD lastClickTime = 0;
-char buff[100]=0;
+char buff[100]={0};
 short blockNext=0;
 
 LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
