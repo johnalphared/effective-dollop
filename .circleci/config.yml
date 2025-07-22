@@ -7,17 +7,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install winget
-          command: |
-            irm asheroto.com/winget | iex
-      - run:
-          name: Install gcc
-          command: |
-            winget install --id=BrechtSanders.WinLibs.MCF.UCRT --accept-package-agreements --accept-source-agreements
-      - run:
           name: Build project
           command: |
-            gcc -o mouse-debouncer.exe mouse-debouncer.c -mwindows
+            cl  /W4 /Fe:mouse-debouncer.exe mouse-debouncer.c
       - run:
           name: Pack binary
           command: 7z a mouse-debouncer.7z mouse-debouncer.exe
