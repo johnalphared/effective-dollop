@@ -10,7 +10,7 @@ jobs:
           name: Build project
           shell: cmd.exe
           command: |
-            C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat
+            "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat"
             cl  /W4 /Fe:mouse-debouncer.exe mouse-debouncer.c
       - run:
           name: Pack binary
