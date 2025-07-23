@@ -29,7 +29,7 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
                     OutputDebugStringA("not blockNext up");
                 }
             }
-            if (elapsed < DEBOUNCE_INTERVAL_MS) {
+            else if (elapsed < DEBOUNCE_INTERVAL_MS) {
                 // Suppress event (debounced)
                 blockNext=1;
                 OutputDebugStringA("block");
