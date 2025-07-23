@@ -1,3 +1,5 @@
+#pragma comment(lib, "user32.lib")
+
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
@@ -19,8 +21,13 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
             OutputDebugStringA(buff);
             if(blockNext){
                 blockNext=0;
-                OutputDebugStringA("blockNext");
-                return 1;
+                if(wParam == WM_LBUTTONDOWN){
+                    OutputDebugStringA("blockNext");
+                    return 1;
+                }
+                else{
+                    OutputDebugStringA("not blockNext up");
+                }
             }
             if (elapsed < DEBOUNCE_INTERVAL_MS) {
                 // Suppress event (debounced)
