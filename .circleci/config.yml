@@ -13,10 +13,10 @@ jobs:
           name: Build project
           command: |
             cd rufus
-            msbuild rufus.sln -property:Configuration=Release
+            msbuild rufus.sln -property:Configuration=Release,Platform=x64
       - run:
           name: Pack binary
-          command: 7z a rufus.7z ".\rufus"
+          command: 7z a rufus-x64.7z ".\rufus"
       - run:
           name: Upload artifact
           shell: pwsh.exe
@@ -25,7 +25,7 @@ jobs:
             $form = @{
                 packageName  = 'rufus'
                 packageVersion   = 'latest'
-                packageFiles     = Get-Item -Path 'rufus.7z'
+                packageFiles     = Get-Item -Path 'rufus-x64.7z'
             }
             $headers = @{
               "Authorization" = "Bearer $env:REPOFLOW_PAT"
