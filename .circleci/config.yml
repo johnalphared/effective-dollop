@@ -4,6 +4,10 @@ orbs:
 jobs:
   build:
     executor: win/server-2022
+    parameters:
+      platform:
+        type: enum
+        enum: [x64, x86, arm]
     steps:
       - checkout
       - run:
@@ -13,10 +17,10 @@ jobs:
           name: Build project
           command: |
             cd rufus
-            msbuild rufus.sln -property:Configuration=Release,Platform=x64
+            msbuild rufus.sln -property:Configuration=Release,Platform=<< parameters.platform >>
       - run:
           name: Pack binary
-          command: 7z a rufus-x64.7z ".\rufus\x64\Release\rufus.exe"
+          command: 7z a rufus-<< parameters.platform >>.7z ".\rufus\<< parameters.platform >>\Release\rufus.exe"
       - run:
           name: Upload artifact
           shell: pwsh.exe
@@ -25,13 +29,16 @@ jobs:
             $form = @{
                 packageName  = 'rufus'
                 packageVersion   = 'latest'
-                packageFiles     = Get-Item -Path 'rufus-x64.7z'
+                packageFiles     = Get-Item -Path 'rufus-<< parameters.platform >>.7z'
             }
             $headers = @{
               "Authorization" = "Bearer $env:REPOFLOW_PAT"
             }
             Invoke-WebRequest -Uri $env:REPOFLOW_URL -Headers $headers -Method Post -Form $form
 workflows:
-  say-hello-workflow:
+  build-matrix:
     jobs:
-      - build
+      - build:
+          matrix:
+            parameters:
+              platform: [x64, x86, arm]
