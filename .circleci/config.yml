@@ -20,7 +20,8 @@ jobs:
             msbuild rufus.sln -property:Configuration=Release,Platform=<< parameters.platform >>
       - run:
           name: Pack binary
-          command: 7z a rufus-<< parameters.platform >>.7z .\rufus\<< parameters.platform >>\Release\rufus.exe
+          command: |
+            7z a rufus-<< parameters.platform >>.7z .\rufus\<< parameters.platform >>\Release\rufus.exe
       - run:
           name: Upload artifact
           shell: pwsh.exe
