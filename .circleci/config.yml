@@ -7,7 +7,7 @@ jobs:
     parameters:
       platform:
         type: enum
-        enum: [x64, x86, arm]
+        enum: [x64, x86, arm64]
     steps:
       - checkout
       - run:
@@ -20,7 +20,7 @@ jobs:
             msbuild rufus.sln -property:Configuration=Release,Platform=<< parameters.platform >>
       - run:
           name: Pack binary
-          command: 7z a rufus-<< parameters.platform >>.7z ".\rufus\<< parameters.platform >>\Release\rufus.exe"
+          command: 7z a rufus-<< parameters.platform >>.7z .\rufus\<< parameters.platform >>\Release\rufus.exe
       - run:
           name: Upload artifact
           shell: pwsh.exe
@@ -41,4 +41,4 @@ workflows:
       - build:
           matrix:
             parameters:
-              platform: [x64, x86, arm]
+              platform: [x64, x86, arm64]
