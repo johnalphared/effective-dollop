@@ -21,7 +21,8 @@ jobs:
       - run:
           name: Pack binary
           command: |
-            7z a rufus-<< parameters.platform >>.7z .\rufus\<< parameters.platform >>\Release\rufus.exe
+            $platform = '<< parameters.platform >>'
+            7z a rufus-$platform.7z .\rufus\$platform\Release\rufus.exe
       - run:
           name: Upload artifact
           shell: pwsh.exe
