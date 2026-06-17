@@ -1,46 +1,31 @@
 version: 2.1
 orbs:
-  win: circleci/windows@5.1.0
+  android: circleci/android@3.2.0
 jobs:
   build:
-    executor: win/server-2022
-    parameters:
-      platform:
-        type: enum
-        enum: [x64, x86, arm64]
+    executor:
+      name: android/android_machine
+      resource-class: large
+      tag: default
     steps:
-      - checkout
       - run:
           name: "Clone repo"
-          command: "git clone https://github.com/pbatard/rufus"
+          command: |
+            git clone https://gitlab.com/LenaSaenger04/stealth.git
+            cd stealth
+            git checkout hotfix/json_api_fix
+      - android/accept_licenses:
       - run:
           name: Build project
           command: |
-            cd rufus
-            msbuild rufus.sln -property:Configuration=Release,Platform=<< parameters.platform >>
+            cd stealth
+            ./gradlew build
       - run:
           name: Pack binary
           command: |
-            $platform = '<< parameters.platform >>'
-            7z a rufus-$platform.7z .\rufus\$platform\Release\rufus.exe
-      - run:
-          name: Upload artifact
-          shell: pwsh.exe
-          command: |
-            $PSVersionTable
-            $form = @{
-                packageName  = 'rufus'
-                packageVersion   = 'latest'
-                packageFiles     = Get-Item -Path 'rufus-<< parameters.platform >>.7z'
-            }
-            $headers = @{
-              "Authorization" = "Bearer $env:REPOFLOW_PAT"
-            }
-            Invoke-WebRequest -Uri $env:REPOFLOW_URL -Headers $headers -Method Post -Form $form
+            7z a stealth.7z ./stealth/
 workflows:
-  build-matrix:
+  mystealth:
     jobs:
       - build:
-          matrix:
-            parameters:
-              platform: [x64, x86, arm64]
+          matrix
