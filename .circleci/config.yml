@@ -15,7 +15,7 @@ jobs:
             git checkout hotfix/json_api_fix
       - android/change_java_version:
           distribution: temurin
-          java_version: 8
+          java_version: 11
       - run:
           name: Build project
           command: |
