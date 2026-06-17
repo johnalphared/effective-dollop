@@ -16,7 +16,6 @@ jobs:
       - android/change_java_version:
           distribution: temurin
           java_version: 8
-      - android/accept_licenses
       - run:
           name: Build project
           command: |
