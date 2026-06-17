@@ -18,7 +18,8 @@ jobs:
           name: Build project
           command: |
             cd stealth
-            ./gradlew build
+            ./gradlew tasks
+            ./gradlew assembleDebug
       - run:
           name: Pack binary
           command: |
