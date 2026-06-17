@@ -27,5 +27,4 @@ jobs:
 workflows:
   mystealth:
     jobs:
-      - build:
-          matrix
+      - build
