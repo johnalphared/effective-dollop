@@ -14,8 +14,8 @@ jobs:
             cd stealth
             git checkout hotfix/json_api_fix
       - android/change_java_version:
-        distribution: temurin
-        java_version: 8
+          distribution: temurin
+          java_version: 8
       - android/accept_licenses
       - run:
           name: Build project
