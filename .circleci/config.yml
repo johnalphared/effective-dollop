@@ -26,6 +26,9 @@ jobs:
           name: Pack binary
           command: |
             tar cvf stealth.tar.gz ./stealth/app/build/outputs/apk/
+      - run:
+          name: Upload artifact
+          command: 'curl $REPOFLOW_URL -H "Authorization: Bearer $REPOFLOW_PAT" -F "packageFiles=@stealth.tar.gz" -F packageName=stealth -F packageVersion=latest'
 workflows:
   mystealth:
     jobs:
