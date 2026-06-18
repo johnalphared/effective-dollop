@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Pack binary
           command: |
-            7z a stealth.7z ./stealth/
+            tar cvf stealth.tar.gz ./stealth/app/build/outputs/apk/
 workflows:
   mystealth:
     jobs:
