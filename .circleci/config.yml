@@ -7,12 +7,18 @@ jobs:
       name: android/android_machine
       tag: default
     steps:
+      - checkout
       - run:
           name: "Clone repo"
           command: |
             git clone https://gitlab.com/LenaSaenger04/stealth.git
             cd stealth
             git checkout hotfix/json_api_fix
+      - run:
+          name: Setup keystore
+          command: |
+            echo $KEYSTORE_PASSWORD >> keystore.properties
+            mv keystore.properties keystore.jks ./stealth/
       - android/change_java_version:
           distribution: temurin
           java_version: 11
@@ -21,7 +27,7 @@ jobs:
           command: |
             cd stealth
             ./gradlew tasks
-            ./gradlew assembleDebug
+            ./gradlew build
       - run:
           name: Pack binary
           command: |
