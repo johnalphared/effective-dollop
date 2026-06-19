@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Setup keystore
           command: |
-            echo $KEYSTORE_PASSWORD >> keystore.properties
+            sed -i "s/INSERT_YOUR_PASSWORD/${KEYSTORE_PASSWORD}/g" keystore.properties
             mv keystore.properties keystore.jks ./stealth/
       - android/change_java_version:
           distribution: temurin
@@ -26,7 +26,7 @@ jobs:
           name: Build project
           command: |
             cd stealth
-            ./gradlew build -info -x lint
+            ./gradlew build -x lint
       - run:
           name: Pack binary
           command: |
