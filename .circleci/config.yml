@@ -16,7 +16,7 @@ jobs:
             git checkout hotfix/json_api_fix
             git config --global user.email "circleci@example.com"
             git config --global user.name "Circleci"
-            git merge origin/feature/feature_130 origin/fix/download-audio
+            git merge --no-edit origin/feature/feature_130 origin/fix/download-audio
       - run:
           name: Setup keystore
           command: |
