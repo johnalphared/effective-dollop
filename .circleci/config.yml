@@ -14,6 +14,7 @@ jobs:
             git clone https://gitlab.com/LenaSaenger04/stealth.git
             cd stealth
             git checkout hotfix/json_api_fix
+            git merge feature/feature_130 fix/download-audio
       - run:
           name: Setup keystore
           command: |
